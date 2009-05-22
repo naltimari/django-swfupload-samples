@@ -1,0 +1,45 @@
+This is a very plain and simple Django app that runs all the demos for swfupload.
+
+CONTENTS
+========
+django-swfupload-samples.tar.gz only contains the Django project files: __init__.py, manage.py, settings.py and urls.py. You should download the SWFUpload samples from [2]. Read on.
+
+HOW IT WORKS
+============
+The swfupload demos are supposed to be installed on a webserver that runs PHP. But Django folks are not very fond of PHP (at least I'm not), or dont' want to mess with Apache .confs just to see some demos in action. Then, I wrote this app to run the demos using Django's built-in webserver.
+
+Django will serve index.php as plain html, and upload.php gets overruled by a normal Django callable that will 'consume' the uploaded file, thus the swfupload control will react as expected. The progress bar will work, and the javascript event handlers will be fired accordingly.
+
+HOW TO INSTALL IT
+=================
+I assume you have Django installed. If not, then pay a visit to [1] and RTFM.
+
+1. Unzip the package somewhere (or clone it via git/svn)
+2. Unzip the SWFupload samples (get them at [2]) inside the above folder
+3. You should get the following:
+
+   django-swfupload-samples
+     + demos
+     + samples
+     __init__.py
+     manage.py
+	 Sample-Demo Changelog.txt
+     settings.py
+     urls.py
+   
+4. If you have your tree like above, then you're set.
+5. Open a terminal and, from the folder from step 1, type this:
+
+   $ python manage.py runserver
+
+6. Fire up your browser and launch http://localhost:8000/
+
+That's it, you can fiddle with the swfupload control and the events now, modifying the parameters or the javascript files inside the js folder. Remember not to use PHP commands inside index.php, since they will NOT be executed.
+
+Links:
+[1] http://djangoproject.com
+[2] http://swfupload.googlecode.com/files/SWFUpload%20v2.2.0.1%20Samples.zip
+
+Hope you have fun!
+
+Nelson Altimari
