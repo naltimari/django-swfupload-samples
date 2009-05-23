@@ -1,6 +1,6 @@
 # Django settings for django-swfupload-samples project.
 import os
-PROJECT_PATH = os.path.abspath(os.path.dirname(__file__)) + '/demos'
+PROJECT_PATH = os.path.abspath(os.path.dirname(__file__))
 
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
@@ -10,6 +10,10 @@ ADMINS = (
 )
 
 MANAGERS = ADMINS
+
+# Database settings
+DATABASE_ENGINE   = 'sqlite3'
+DATABASE_NAME     = os.path.join(PROJECT_PATH, 'db/swfupload.db')
 
 # Local time zone for this installation. Choices can be found here:
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
@@ -35,7 +39,7 @@ MEDIA_ROOT = PROJECT_PATH
 # URL that handles the media served from MEDIA_ROOT. Make sure to use a
 # trailing slash if there is a path component (optional in other cases).
 # Examples: "http://media.lawrence.com", "http://example.com/media/"
-MEDIA_URL = ''
+MEDIA_URL = '/media/'
 
 # URL prefix for admin media -- CSS, JavaScript and images. Make sure to use a
 # trailing slash.
@@ -64,9 +68,13 @@ TEMPLATE_DIRS = (
     # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
-	PROJECT_PATH,
+    PROJECT_PATH + '/demos',
 )
 
 INSTALLED_APPS = (
+    'django.contrib.admin',
+    'django.contrib.auth',
+    'django.contrib.contenttypes',
     'django.contrib.sessions',
+    'swfadmin',
 )

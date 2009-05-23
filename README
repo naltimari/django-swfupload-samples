@@ -22,17 +22,22 @@ I assume you have Django installed. If not, then pay a visit to [1] and RTFM.
      + demos
      + samples
      __init__.py
+     admin.py
      manage.py
-	 Sample-Demo Changelog.txt
+     Sample-Demo Changelog.txt
      settings.py
      urls.py
    
 4. If you have your tree like above, then you're set.
 5. Open a terminal and, from the folder from step 1, type this:
 
-   $ python manage.py runserver
+   $ python manage.py syncdb
+   $ python manage.py runserver [ip:port]
 
-6. Fire up your browser and launch http://localhost:8000/
+6. Fire up your browser and launch either:
+
+   http://localhost:8000/        (samples)
+   http://localhost:8000/admin/  (django admin using swfupload)
 
 That's it, you can fiddle with the swfupload control and the events now, modifying the parameters or the javascript files inside the js folder. Remember not to use PHP commands inside index.php, since they will NOT be executed.
 
