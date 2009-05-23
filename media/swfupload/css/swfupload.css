@@ -4,8 +4,33 @@
 	Updated on:  May 1, 2008
 ----------------------------------------------- */
 
+div.fieldset {
+	border:  2px solid #afe14c;
+	padding: 6px;
+	margin-bottom: 8px;
+}
+
+div.fieldset span.legend {
+	position: relative;
+	background-color: #fff;
+	padding: 3px;
+	top: -14px;
+	font-weight: bold;
+}
+
+div.flash {
+	width: 470px;
+	border-color: #D9E4FF;
+
+	-moz-border-radius : 5px;
+	-webkit-border-top-left-radius : 5px;
+    -webkit-border-top-right-radius : 5px;
+    -webkit-border-bottom-left-radius : 5px;
+    -webkit-border-bottom-right-radius : 5px;
+}
+
 .progressWrapper {
-	width: 357px;
+	width: 460px;
 	overflow: hidden;
 }
 
@@ -102,6 +127,8 @@ a.progressCancel:hover {
 }
 
 /* -- SWFUpload Object Styles ------------------------------- */
+
 .swfupload {
-	vertical-align: top;
+	position: absolute;
+	z-index: 1;
 }

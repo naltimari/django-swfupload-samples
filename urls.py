@@ -9,7 +9,7 @@ admin.autodiscover()
 
 import os
 def php2html(request, path, page):
-	return render_to_response(os.path.join(settings.MEDIA_ROOT, path) + '\\%s.php' % page)
+	return render_to_response(os.path.join(settings.MEDIA_ROOT + '/demos', path) + '\\%s.php' % page)
 
 def upload(request):
 	if request.method == 'POST':
