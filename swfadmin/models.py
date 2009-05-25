@@ -60,9 +60,13 @@ window.onload = function() {
 </div>
 """
 
+# Create your models here.
+
 class SWFUploadWidget(forms.FileInput):
 	class Media:
-		css = {	'all': ('swfupload/css/swfupload.css',)	}
+		css = {
+			'all': ('swfupload/css/swfupload.css',)
+		}
 		js = (
 			'swfupload/js/fileprogress.js',
 			'swfupload/js/handlers.js',
@@ -73,6 +77,11 @@ class SWFUploadWidget(forms.FileInput):
 	def render(self, name, value, attrs=None):
 		return mark_safe(u''.join(swfinit))
 
+class Image(models.Model):
+	title = models.CharField(max_length=200)
+	upload = models.ImageField(upload_to='public')
+	def __unicode__(self):
+		return self.title
 
 class ImageForm(forms.ModelForm):
 	upload = forms.FileField(widget=SWFUploadWidget)
