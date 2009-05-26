@@ -11,10 +11,18 @@ import os
 def php2html(request, path, page):
 	return render_to_response(os.path.join(settings.MEDIA_ROOT + '/demos', path) + '\\%s.php' % page)
 
+def handle_uploaded_file(f):
+    destination = open(settings.MEDIA_ROOT + '/media/' + f.name, 'wb+')
+    for chunk in f.chunks():
+        destination.write(chunk)
+    destination.close()
+
 def upload(request):
 	if request.method == 'POST':
 		if request.FILES:
-			return HttpResponse()
+			for f in request.FILES:
+				handle_uploaded_file(request.FILES[f])
+		return HttpResponse()
 	raise Http404
 
 urlpatterns = patterns('django.views',

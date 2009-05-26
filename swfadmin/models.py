@@ -16,8 +16,8 @@ var swfu;
 window.onload = function() {
 	var settings = {
 		flash_url : "/media/swfupload/swf/swfupload.swf",
-		upload_url: "upload.php",
-		post_params: {"PHPSESSID" : "1234567890"},
+		upload_url: "/swfupload/upload.php",
+		post_params: {"PHPSESSID" : "%s"},
 		file_size_limit : "1 MB",
 		file_types : "*.jpg;*.jpeg",
 		file_types_description : "JPEG Files",
@@ -75,15 +75,16 @@ class SWFUploadWidget(forms.FileInput):
 			'swfupload/js/swfupload.swfobject.js',
 		)
 	def render(self, name, value, attrs=None):
-		return mark_safe(u''.join(swfinit))
-
-class Image(models.Model):
-	title = models.CharField(max_length=200)
-	upload = models.ImageField(upload_to='public')
-	def __unicode__(self):
-		return self.title
+		return mark_safe(u''.join(swfinit % attrs))
 
 class ImageForm(forms.ModelForm):
-	upload = forms.FileField(widget=SWFUploadWidget)
+	upload = forms.CharField(
+		widget=SWFUploadWidget(
+			attrs={
+				'caption': 'teste',
+				'session_id': 'teste',
+			}
+		)
+	)
 	class Meta:
 		model = Image
