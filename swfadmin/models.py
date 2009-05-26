@@ -4,11 +4,17 @@ from django.utils.safestring import mark_safe
 
 # Create your models here.
 
-class Image(models.Model):
+class Album(models.Model):
 	title = models.CharField(max_length=200)
-	upload = models.ImageField(upload_to='public')
 	def __unicode__(self):
 		return self.title
+
+class Image(models.Model):
+	upload = models.ImageField(upload_to='media', blank=True)
+	title = models.CharField(max_length=200, blank=True)
+	album = models.ForeignKey(Album)
+	def __unicode__(self):
+		return self.upload.name
 
 swfinit = """
 <script type="text/javascript">
@@ -62,6 +68,11 @@ window.onload = function() {
 
 # Create your models here.
 
+class ImageThumbWidget(forms.HiddenInput):
+	def render(self, name, value, attrs=None):
+		hidden = super(ImageThumbWidget, self).render(name, value, attrs)
+		return mark_safe(u'%s<img src="/%s" width="70" height="70">' % (hidden, value))
+
 class SWFUploadWidget(forms.FileInput):
 	class Media:
 		css = {
@@ -77,14 +88,22 @@ class SWFUploadWidget(forms.FileInput):
 	def render(self, name, value, attrs=None):
 		return mark_safe(u''.join(swfinit % attrs))
 
-class ImageForm(forms.ModelForm):
+class AlbumForm(forms.ModelForm):
 	upload = forms.CharField(
 		widget=SWFUploadWidget(
 			attrs={
 				'caption': 'teste',
 				'session_id': 'teste',
 			}
-		)
+		),
+		required=False,
+	)
+	class Meta:
+		model = Album
+		
+class ImageForm(forms.ModelForm):
+	upload = forms.CharField(
+		widget=ImageThumbWidget
 	)
 	class Meta:
 		model = Image
