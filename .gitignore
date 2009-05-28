@@ -1,4 +1,6 @@
 *.pyc
 db/*
+demos/*
+!demos/admin/edit_inline/*
 samples/*
 media/*.jpg
