@@ -71,7 +71,7 @@ window.onload = function() {
 class ImageThumbWidget(forms.HiddenInput):
 	def render(self, name, value, attrs=None):
 		hidden = super(ImageThumbWidget, self).render(name, value, attrs)
-		return mark_safe(u'%s<img src="/%s" width="70" height="70">' % (hidden, value))
+		return mark_safe(u'%s<img src="/%s" width="70" height="70" alt="%s">' % (hidden, value, value))
 
 class SWFUploadWidget(forms.FileInput):
 	class Media:
