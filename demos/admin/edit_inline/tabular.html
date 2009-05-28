@@ -10,7 +10,7 @@ $(document).ready(function() {
 		placeholder: 'placeholder',
 		stop: function() {
 			$("#sortable li").each(function(n, item) {
-				document.fotos.elements['ordem_foto_'+(n+1)].value = item.id;
+				document.forms[0].elements['ordem_foto_'+(n+1)].value = item.id;
 			});
 		}
 	});
@@ -28,7 +28,7 @@ $(document).ready(function() {
 		{% if inline_admin_form.form.non_field_errors %}
 			<li>{{ inline_admin_form.form.non_field_errors }}</li>
 		{% endif %}
-		<li class="{% cycle row1,row2 %}">
+		<li id="{{ forloop.counter }}" class="{% cycle row1,row2 %}">
 		 
 			{% if inline_admin_form.original or inline_admin_form.show_url %}
 			<!-- {{ inline_admin_form.original }} -->

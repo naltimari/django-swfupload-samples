@@ -12,7 +12,10 @@ class Album(models.Model):
 class Image(models.Model):
 	upload = models.ImageField(upload_to='media', blank=True)
 	title = models.CharField(max_length=200, blank=True)
+	order = models.DateTimeField(auto_now_add=True)
 	album = models.ForeignKey(Album)
+	class Meta:
+		ordering = ['-order']
 	def __unicode__(self):
 		return self.upload.name
 
