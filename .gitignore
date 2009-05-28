@@ -1,4 +1,5 @@
+*.pyc
 db/*
 demos/*
 samples/*
-*.pyc
+media/*.jpg
