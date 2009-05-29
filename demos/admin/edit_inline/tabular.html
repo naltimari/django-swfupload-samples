@@ -9,9 +9,16 @@ $(document).ready(function() {
 	$("#sortable").sortable({
 		placeholder: 'placeholder',
 		stop: function() {
+			order = new Array();
+			d = new Date();
+			dstr = d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate()+' '+d.getHours()+':'+d.getMinutes()+':'+d.getSeconds()+'.'
 			$("#sortable li").each(function(n, item) {
-				document.forms[0].elements['ordem_foto_'+(n+1)].value = item.id;
+				order[n] = item.id*100000;
 			});
+			order.reverse();
+			N = order.length;
+			for (k=0; k < N; ++k)
+				document.forms[0].elements['image_set-'+k+'-cdate'].value = dstr + order[k];
 		}
 	});
 	$("#sortable").disableSelection();
@@ -28,32 +35,32 @@ $(document).ready(function() {
 		{% if inline_admin_form.form.non_field_errors %}
 			<li>{{ inline_admin_form.form.non_field_errors }}</li>
 		{% endif %}
-		<li id="{{ forloop.counter }}" class="{% cycle row1,row2 %}">
+		<li id="{{ forloop.counter0 }}" class="{% cycle row1,row1 %}">
 		 
 			{% if inline_admin_form.original or inline_admin_form.show_url %}
 			<!-- {{ inline_admin_form.original }} -->
 			{% endif %}
 			{{ inline_admin_form.pk_field.field }} {{ inline_admin_form.fk_field.field }}
 		 
-			<div>
+			<table><tr><td>{{ forloop.counter0 }}</td>
 			{% for fieldset in inline_admin_form %}
 				{% for line in fieldset %}
 					{% for field in line %}
 						{% if field.is_hidden %}
 							{{ field.field }}
 						{% else %}
-						<span class="{{ field.field.name }}">
+						<td class="{{ field.field.name }}">
 						{{ field.field }}
 						{{ field.field.errors.as_p }}
-						</span>
+						</td>
 						{% endif %}
 					{% endfor %}
 				{% endfor %}
 			{% endfor %}
 			{% if inline_admin_formset.formset.can_delete %}
-				<span class="delete">{% if inline_admin_form.original %}{{ inline_admin_form.deletion_field.field }}{% endif %}</span>
+				<td class="delete">{% if inline_admin_form.original %}{{ inline_admin_form.deletion_field.field }}{% endif %}</td>
 			{% endif %}
-			</div>
+			</tr></table>
 		
 		</li>
 	{% endfor %}

@@ -1,6 +1,7 @@
 from django.db import models
 from django import forms
 from django.utils.safestring import mark_safe
+import datetime
 
 # Create your models here.
 
@@ -10,14 +11,18 @@ class Album(models.Model):
 		return self.title
 
 class Image(models.Model):
-	upload = models.ImageField(upload_to='media', blank=True)
+	media = models.ImageField(upload_to='media', blank=True)
 	title = models.CharField(max_length=200, blank=True)
-	order = models.DateTimeField(auto_now_add=True)
+	cdate = models.DateTimeField(blank=True)
 	album = models.ForeignKey(Album)
 	class Meta:
-		ordering = ['-order']
+		ordering = ['-cdate']
 	def __unicode__(self):
-		return self.upload.name
+		return self.title
+	def save(self, force_insert=False, force_update=False):
+		if not self.cdate:
+			self.cdate = datetime.datetime.now()
+		super(Image, self).save(force_insert, force_update)
 
 swfinit = """
 <script type="text/javascript">
@@ -74,7 +79,7 @@ window.onload = function() {
 class ImageThumbWidget(forms.HiddenInput):
 	def render(self, name, value, attrs=None):
 		hidden = super(ImageThumbWidget, self).render(name, value, attrs)
-		return mark_safe(u'%s<img src="/%s" width="70" height="70" alt="%s">' % (hidden, value, value))
+		return mark_safe(u'%s<img src="/%s" width=80 height=80 alt="%s">' % (hidden, value, value))
 
 class SWFUploadWidget(forms.FileInput):
 	class Media:
@@ -92,21 +97,13 @@ class SWFUploadWidget(forms.FileInput):
 		return mark_safe(u''.join(swfinit % attrs))
 
 class AlbumForm(forms.ModelForm):
-	upload = forms.CharField(
-		widget=SWFUploadWidget(
-			attrs={
-				'caption': 'teste',
-				'session_id': 'teste',
-			}
-		),
-		required=False,
-	)
+	upload = forms.CharField(widget=SWFUploadWidget, required=False)
 	class Meta:
 		model = Album
 		
 class ImageForm(forms.ModelForm):
-	upload = forms.CharField(
-		widget=ImageThumbWidget
-	)
+	cdate = forms.CharField(widget=forms.TextInput(attrs={'size': '30'}))
+	title = forms.CharField(widget=forms.TextInput())
+	media = forms.CharField(widget=ImageThumbWidget)
 	class Meta:
 		model = Image

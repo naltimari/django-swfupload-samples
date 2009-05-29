@@ -11,26 +11,18 @@ import os
 def php2html(request, path, page):
 	return render_to_response(os.path.join(settings.MEDIA_ROOT + '/demos', path) + '\\%s.php' % page)
 
-def save_uploads_to_filesystem(request):
-    for name in request.FILES:
-        f = request.FILES[name]
-        destination = open(settings.MEDIA_ROOT + '/media/' + f.name, 'wb+')
-        for chunk in f.chunks():
-            destination.write(chunk)
-        destination.close()
-
-def save_uploads(request):
+def save(request):
 	from swfadmin.models import Album, Image
 	a = Album.objects.get(pk=1)
 	for name in request.FILES:
-		i = Image(upload=request.FILES[name], album=a)
-		i.upload.save(request.FILES[name].name, request.FILES[name])
+		i = Image(media=request.FILES[name], album=a)
+		i.media.save(request.FILES[name].name, request.FILES[name])
 		i.save()
 
 def upload(request):
 	if request.method == 'POST':
 		if request.FILES:
-			save_uploads(request)
+			save(request)
 		return HttpResponse()
 	raise Http404
 
