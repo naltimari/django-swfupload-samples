@@ -7,6 +7,8 @@ import datetime
 
 class Album(models.Model):
 	title = models.CharField(max_length=200)
+	def itens(self):
+		return self.image_set.count()
 	def __unicode__(self):
 		return self.title
 
@@ -27,11 +29,15 @@ class Image(models.Model):
 swfinit = """
 <script type="text/javascript">
 var swfu;
+var lembrete = 'Por favor salve a galeria antes de escolher e transmitir as fotos!';
 window.onload = function() {
+	galeria_id = location.pathname.match(/\d+/);
+	if (galeria_id == null)
+		return;
 	var settings = {
 		flash_url : "/media/swfupload/swf/swfupload.swf",
 		upload_url: "/swfupload/upload.php",
-		post_params: {"PHPSESSID" : "%s"},
+		post_params: { "galeria_id": galeria_id },
 		file_size_limit : "1 MB",
 		file_types : "*.jpg;*.jpeg",
 		file_types_description : "JPEG Files",
@@ -60,7 +66,7 @@ window.onload = function() {
 		upload_complete_handler : uploadComplete,
 		queue_complete_handler : queueComplete	// Queue plugin event
 	};
-
+	
 	swfu = new SWFUpload(settings);
  };
 </script>
@@ -69,7 +75,7 @@ window.onload = function() {
 	<span class="legend">Arquivos a transmitir</span>
 </div>
 <span id="spanButtonPlaceHolder"></span>
-<input type="button" value="Escolher arquivos" />
+<input type="button" value="Escolher arquivos" onClick="alert(lembrete)"/>
 <input id="btnCancel" type="button" value="Abortar" onclick="swfu.cancelQueue();" disabled="disabled" />
 </div>
 """
@@ -81,7 +87,7 @@ class ImageThumbWidget(forms.HiddenInput):
 		hidden = super(ImageThumbWidget, self).render(name, value, attrs)
 		return mark_safe(u'%s<img src="/%s" width=80 height=80 alt="%s">' % (hidden, value, value))
 
-class SWFUploadWidget(forms.FileInput):
+class SWFUploadWidget(forms.TextInput):
 	class Media:
 		css = {
 			'all': ('swfupload/css/swfupload.css',)
@@ -94,16 +100,21 @@ class SWFUploadWidget(forms.FileInput):
 			'swfupload/js/swfupload.swfobject.js',
 		)
 	def render(self, name, value, attrs=None):
-		return mark_safe(u''.join(swfinit % attrs))
+		return mark_safe(u''.join(swfinit % self.attrs))
+
+class SWFUploadField(forms.Field):
+	widget = SWFUploadWidget(attrs={'album_id': 1})
+	def __init__(self, *args, **kwargs):
+		super(SWFUploadField, self).__init__(*args, **kwargs)
+		self.required = False
 
 class AlbumForm(forms.ModelForm):
-	upload = forms.CharField(widget=SWFUploadWidget, required=False)
+	upload = SWFUploadField()
 	class Meta:
 		model = Album
-		
+
 class ImageForm(forms.ModelForm):
-	cdate = forms.CharField(widget=forms.TextInput(attrs={'size': '30'}))
-	title = forms.CharField(widget=forms.TextInput())
+	cdate = forms.CharField(widget=forms.HiddenInput)
 	media = forms.CharField(widget=ImageThumbWidget)
 	class Meta:
 		model = Image

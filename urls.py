@@ -13,9 +13,9 @@ def php2html(request, path, page):
 
 def save(request):
 	from swfadmin.models import Album, Image
-	a = Album.objects.get(pk=1)
+	a = Album.objects.get(pk=request.POST['galeria_id'])
 	for name in request.FILES:
-		i = Image(media=request.FILES[name], album=a)
+		i = Image(media=request.FILES[name], album=a, title=request.FILES[name].name)
 		i.media.save(request.FILES[name].name, request.FILES[name])
 		i.save()
 
