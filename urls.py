@@ -9,11 +9,12 @@ from django.http import HttpResponse, Http404
 
 import os
 def serve_html(request, path):
-	return render_to_response(os.path.join(settings.MEDIA_ROOT, path) + '\index.php')
+	return render_to_response(os.path.join(settings.MEDIA_ROOT, path, 'index.php'))
 
 def upload(request):
 	if request.method == 'POST':
 		if request.FILES:
+			print request.POST
 			return HttpResponse()
 	raise Http404
 

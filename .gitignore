@@ -1,3 +1,4 @@
 demos/*
 samples/*
 *.pyc
+.DS_Store
